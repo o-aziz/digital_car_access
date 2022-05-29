@@ -220,7 +220,7 @@ class _HomeViewState extends State<HomeView> {
           ),
           const SizedBox(height: 20),
           ...List.generate(
-            Provider.of<DriverNotifier>(context, listen: true).length,
+            Provider.of<DriverNotifier>(context, listen: false).length,
             (index) => Column(
               children: [
                 Container(

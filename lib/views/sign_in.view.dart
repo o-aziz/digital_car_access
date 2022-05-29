@@ -103,6 +103,7 @@ class _LoginEmail extends StatelessWidget {
       width: MediaQuery.of(context).size.width / 2,
       child: TextField(
         controller: emailController,
+        keyboardType: TextInputType.emailAddress,
         decoration: const InputDecoration(hintText: 'Email'),
       ),
     );
