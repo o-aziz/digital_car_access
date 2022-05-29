@@ -44,147 +44,9 @@ class _HomeViewState extends State<HomeView> {
                     const SizedBox(height: 10),
                     controlCarBloc(size),
                     const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      width: size.width * 0.9,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: const [
-                          BoxShadow(
-                            offset: Offset(0, 2),
-                            blurRadius: 4,
-                            color: Colors.black26,
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            "Show Drivers",
-                            style: TextStyle(
-                              fontSize: size.width * 0.05,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          FutureBuilder<QuerySnapshot>(
-                            future: getDriversData(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else {
-                                return Wrap(
-                                  children: snapshot.data!.docs
-                                      .map((DocumentSnapshot e) {
-                                    Map<String, dynamic> data =
-                                        e.data() as Map<String, dynamic>;
-                                    return Column(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(8),
-                                          width: size.width * 0.6,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey)),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Name : ",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            size.width * 0.04,
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: "${data["name"]}",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize:
-                                                            size.width * 0.04,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "LaseName : ",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            size.width * 0.04,
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text:
-                                                          "${data["laseName"]}",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize:
-                                                            size.width * 0.04,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              RichText(
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: "Telephone : ",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize:
-                                                            size.width * 0.04,
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: "${data["tel"]}",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize:
-                                                            size.width * 0.04,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                      ],
-                                    );
-                                  }).toList(),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                    showDriversBloc(size),
                     const SizedBox(height: 20),
                     addDriversBloc(size, context),
-                    const SizedBox(height: 20),
                     const SizedBox(height: 50),
                   ],
                 ),
@@ -201,6 +63,132 @@ class _HomeViewState extends State<HomeView> {
               child: const CircularProgressIndicator(),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  Container showDriversBloc(Size size) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      width: size.width * 0.9,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            offset: Offset(0, 2),
+            blurRadius: 4,
+            color: Colors.black26,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            "Show Drivers",
+            style: TextStyle(
+              fontSize: size.width * 0.05,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 20),
+          FutureBuilder<QuerySnapshot>(
+            future: getDriversData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return Wrap(
+                  children: snapshot.data!.docs.map((DocumentSnapshot e) {
+                    Map<String, dynamic> data =
+                        e.data() as Map<String, dynamic>;
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          width: size.width * 0.6,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "Name : ",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: size.width * 0.04,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "${data["name"]}",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: size.width * 0.04,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "LaseName : ",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: size.width * 0.04,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "${data["laseName"]}",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: size.width * 0.04,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: "Telephone : ",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: size.width * 0.04,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: "${data["tel"]}",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: size.width * 0.04,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    );
+                  }).toList(),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
@@ -304,9 +292,9 @@ class _HomeViewState extends State<HomeView> {
         Provider.of<DriverNotifier>(context, listen: false).length = 1;
 
         setState(() {
-          driverName.clear;
-          driverlastName.clear;
-          driverTel.clear;
+          driverName = [];
+          driverlastName = [];
+          driverTel = [];
           driverlastName.add(TextEditingController());
           driverName.add(TextEditingController());
           driverTel.add(TextEditingController());
