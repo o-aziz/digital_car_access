@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _HomeViewState extends State<HomeView> {
   List<TextEditingController> driverlastName = [];
   List<TextEditingController> driverTel = [];
   bool isLoading = false;
+  bool isLocked = false;
   @override
   void initState() {
     driverName.add(TextEditingController());
@@ -408,7 +410,7 @@ class _HomeViewState extends State<HomeView> {
   Container controlCarBloc(Size size) {
     return Container(
       padding: const EdgeInsets.all(15),
-      height: size.height * 0.3,
+      height: size.height * 0.15,
       width: size.width * 0.9,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -430,6 +432,42 @@ class _HomeViewState extends State<HomeView> {
               fontWeight: FontWeight.w600,
             ),
           ),
+          const Spacer(),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isLocked = !isLocked;
+              });
+              lockUnlockCar(isLocked);
+            },
+            child: Container(
+              color: Colors.blue,
+              width: size.width * 0.5,
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  isLocked
+                      ? const Icon(
+                          Icons.lock,
+                          color: Colors.white,
+                        )
+                      : const Icon(
+                          Icons.lock_open,
+                          color: Colors.white,
+                        ),
+                  const SizedBox(width: 5),
+                  Text(
+                    isLocked ? "car is locked" : "car is unlocked",
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -448,4 +486,12 @@ Future<QuerySnapshot<dynamic>> getDriversData() async {
   User user = FirebaseAuth.instance.currentUser!;
   CollectionReference ref = FirebaseFirestore.instance.collection(user.uid);
   return ref.get();
+}
+
+Future lockUnlockCar(bool isLocked) async {
+  FirebaseDatabase database = FirebaseDatabase.instance;
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+  return await ref.set({
+    "lock": isLocked,
+  });
 }
